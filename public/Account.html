@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Study Buddy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav class="nav-container">
+    <h1 class="logo">AI Study Buddy</h1>
+    <ul class="navbar">
+      <li><a href="AI Chat.html">AI Chat</a></li>
+      <li><a href="Study Planner.html">Study Planner</a></li>
+      <li><a href="Study Timer.html">Study Timer</a></li>
+      <li><a class="active" href="Account.html">Account</a></li>
+    </ul>
+  </nav>
+
+  <div class="account-container">
+    <h1 id="formTitle">Sign Up</h1>
+    <p id="formSubtitle">Please fill in this form to create your account.</p>
+    <hr>
+
+    <p id="formMessage" style="display:none; padding:8px 12px; border-radius:5px; font-size:14px;"></p>
+
+    <label>Email</label>
+    <input type="email" id="emailInput" placeholder="Enter Email" required>
+
+    <label>Password</label>
+    <input type="password" id="passwordInput" placeholder="Enter Password" required>
+
+    <div id="repeatPasswordGroup">
+      <label>Repeat Password</label>
+      <input type="password" id="repeatPasswordInput" placeholder="Repeat Password">
+    </div>
+
+    <div id="rememberGroup">
+      <label style="display:flex; align-items:center; gap:8px;">
+        <input type="checkbox" id="rememberMe" checked> Remember me
+      </label>
+    </div>
+
+    <p id="termsText">By creating an account you agree to our <a href="#">Terms &amp; Privacy</a>.</p>
+
+    <div class="clearfix" style="margin-top:16px;">
+      <button type="button" id="cancelBtn">Cancel</button>
+      <button type="button" id="submitBtn">Sign Up</button>
+    </div>
+
+    <p style="margin-top:18px; font-size:13px; text-align:center;">
+      <span id="toggleText">Already have an account?</span>
+      <a href="#" id="toggleLink" style="color:#1f2235; font-weight:bold;">Log In</a>
+    </p>
+
+  </div>
+
+  <script src="account.js"></script>
+</body>
+</html>

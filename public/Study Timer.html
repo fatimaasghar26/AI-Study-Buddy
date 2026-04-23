@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Timer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="timer.css">
+</head>
+<body>
+
+  <nav class="nav-container">
+    <h1 class="logo">AI Study Buddy</h1>
+    <ul class="navbar">
+      <li><a href="AI Chat.html">AI Chat</a></li>
+      <li><a href="Study Planner.html">Study Planner</a></li>
+      <li><a href="Study Timer.html" class="active">Study Timer</a></li>
+      <li><a href="Account.html">Account</a></li>
+    </ul>
+  </nav>
+
+  <div class="timer-container">
+    <h2 class="timer-title">Focus Timer</h2>
+    <p class="timer-sub">Stay focused. Take breaks. Get things done.</p>
+    <hr>
+
+    <div class="mode-tabs">
+      <button class="mode-btn active" onclick="setMode('custom', this)">Custom</button>
+      <button class="mode-btn" onclick="setMode('pomodoro', this)">Pomodoro</button>
+    </div>
+
+    <div class="custom-inputs" id="customInputs">
+      <div class="input-row">
+        <div class="time-group">
+          <label>Minutes</label>
+          <input type="number" id="customMinutes" min="1" max="180" value="25">
+        </div>
+        <div class="time-group">
+          <label>Seconds</label>
+          <input type="number" id="customSeconds" min="0" max="59" value="0">
+        </div>
+      </div>
+    </div>
+
+    <div class="pomodoro-info" id="pomodoroInfo" style="display:none;">
+      <div class="pom-row">
+        <div class="time-group">
+          <label>Work (min)</label>
+          <input type="number" id="pomWork" min="1" max="60" value="25">
+        </div>
+        <div class="time-group">
+          <label>Break (min)</label>
+          <input type="number" id="pomBreak" min="1" max="30" value="5">
+        </div>
+        <div class="time-group">
+          <label>Sessions</label>
+          <input type="number" id="pomSessions" min="1" max="12" value="4">
+        </div>
+      </div>
+    </div>
+
+    <div class="timer-display">
+      <div class="phase-label" id="phaseLabel">Focus</div>
+      <div class="time-display" id="timeDisplay">25:00</div>
+      <div class="session-info" id="sessionInfo"></div>
+    </div>
+
+    <div class="timer-controls">
+      <button class="ctrl-btn" onclick="startTimer()">Start</button>
+      <button class="ctrl-btn secondary" onclick="pauseTimer()">Pause</button>
+      <button class="ctrl-btn secondary" onclick="resetTimer()">Reset</button>
+    </div>
+
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div class="session-log" id="sessionLog"></div>
+  </div>
+
+  <script src="timer.js"></script>
+</body>
+</html>
