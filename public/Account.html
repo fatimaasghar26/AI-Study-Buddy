@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Study Buddy</title>
   <link rel="stylesheet" href="style.css">
+  <script src="authGuard.js"></script>
 </head>
 <body>
   <nav class="nav-container">
@@ -16,42 +17,83 @@
       <li><a class="active" href="Account.html">Account</a></li>
     </ul>
   </nav>
-
-  <div class="account-container">
+  
+  <div class="account-container" id="authSection">
     <h1 id="formTitle">Sign Up</h1>
     <p id="formSubtitle">Please fill in this form to create your account.</p>
     <hr>
 
-    <p id="formMessage" style="display:none; padding:8px 12px; border-radius:5px; font-size:14px;"></p>
-
     <label>Email</label>
     <input type="email" id="emailInput" placeholder="Enter Email" required>
-
     <label>Password</label>
     <input type="password" id="passwordInput" placeholder="Enter Password" required>
-
     <div id="repeatPasswordGroup">
       <label>Repeat Password</label>
       <input type="password" id="repeatPasswordInput" placeholder="Repeat Password">
     </div>
-
     <div id="rememberGroup">
       <label style="display:flex; align-items:center; gap:8px;">
         <input type="checkbox" id="rememberMe" checked> Remember me
       </label>
     </div>
-
     <p id="termsText">By creating an account you agree to our <a href="#">Terms &amp; Privacy</a>.</p>
-
     <div class="clearfix" style="margin-top:16px;">
       <button type="button" id="cancelBtn">Cancel</button>
       <button type="button" id="submitBtn">Sign Up</button>
     </div>
-
     <p style="margin-top:18px; font-size:13px; text-align:center;">
       <span id="toggleText">Already have an account?</span>
       <a href="#" id="toggleLink" style="color:#1f2235; font-weight:bold;">Log In</a>
     </p>
+  </div>
+  <!-- ── PROFILE SECTION (shown when logged in) ── -->
+  <div class="account-container" id="profileSection" style="display:none; max-width:480px;">
+    <!-- Profile Picture -->
+    <div style="text-align:center; margin-bottom:20px;">
+      <img id="pfpPreview" src="https://via.placeholder.com/100" alt="Profile Picture"
+           style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #ccc;">
+      <br>
+      <label style="display:inline-block; margin-top:10px; font-size:13px; color:#555; cursor:pointer;">
+        Change Photo
+        <input type="file" id="pfpInput" accept="image/*" style="display:none;">
+      </label>
+    </div>
+    <hr>
+    <!-- Name & Email -->
+    <h3 style="margin:0 0 14px; color:#1f2235;">Profile Info</h3>
+    <label>Email</label>
+    <input type="email" id="profileEmailInput" readonly
+           style="background:#f5f5f5; color:#888; cursor:not-allowed;">
+    <label>First Name</label>
+    <input type="text" id="firstNameInput" placeholder="Enter First Name">
+    <label>Last Name</label>
+    <input type="text" id="lastNameInput" placeholder="Enter Last Name">
+    <div class="clearfix" style="margin-top:4px;">
+      <button type="button" id="saveProfileBtn"
+              style="background-color:#1f2235; color:white;">Save Profile</button>
+    </div>
+    <hr style="margin-top:24px;">
+    <!-- Change Password -->
+    <h3 style="margin:0 0 14px; color:#1f2235;">Change Password</h3>
+    <label>Current Password</label>
+    <input type="password" id="currentPassInput" placeholder="Enter Current Password">
+    <label>New Password</label>
+    <input type="password" id="newPassInput" placeholder="Enter New Password">
+    <label>Confirm New Password</label>
+    <input type="password" id="confirmPassInput" placeholder="Confirm New Password">
+    <div class="clearfix" style="margin-top:4px;">
+      <button type="button" id="changePassBtn"
+              style="background-color:#1f2235; color:white;">Change Password</button>
+    </div>
+
+    <hr style="margin-top:24px;">
+
+    <!-- Log Out & Delete -->
+    <div class="clearfix">
+      <button type="button" id="logoutBtn">Log Out</button>
+      <button type="button" id="deleteAccountBtn"
+              style="background-color:#c62828; color:white;">Delete Account</button>
+    </div>
 
   </div>
 
