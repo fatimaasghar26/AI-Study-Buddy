@@ -26,10 +26,13 @@ function setMode(m, btn) {
   btn.classList.add("active");
 
   var pomSection = document.getElementById("pomodoroInfo");
+  var customSection = document.getElementById("customInputs");
   if (mode == "pomodoro") {
     pomSection.style.display = "block";
+    if (customSection) customSection.style.display = "none";
   } else {
     pomSection.style.display = "none";
+    if (customSection) customSection.style.display = "block";
   }
 
   resetTimer();
@@ -47,7 +50,9 @@ function getSettings() {
     if (!brk) brk = 5;
     if (!maxSessions) maxSessions = 4;
   } else {
-    work = focusTime;
+    var customInput = document.getElementById("focusMinutes");
+    work = customInput ? parseInt(customInput.value) : focusTime;
+    if (!work) work = focusTime;
   }
 
   return { work: work, brk: brk };
@@ -162,6 +167,15 @@ function resetTimer() {
   timeLeft = 0;
   bar.style.width = "0%";
   loadPhase();
+}
+
+var focusMinutesInput = document.getElementById("focusMinutes");
+if (focusMinutesInput) {
+  focusMinutesInput.addEventListener("change", function () {
+    if (mode == "custom" && timer == null) {
+      loadPhase();
+    }
+  });
 }
 
 start.addEventListener("click", startTimer);
