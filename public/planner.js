@@ -97,7 +97,7 @@ function renderTasks() {
 
       <div>
         <span class="${priorityClass}">${task.priority}</span>
-        <button class="delete-btn" onclick="deleteTask(${task.id})" title="Delete task"></button>
+        <button class="delete-btn" onclick="deleteTask(${task.id})" title="Delete task">X</button>
       </div>
     `;
 
