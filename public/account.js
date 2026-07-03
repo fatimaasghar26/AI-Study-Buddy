@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
   const currentUserEmail = sessionStorage.getItem('userEmail');
 
@@ -8,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupProfileForm(currentUserEmail);
 });
 
-// Helpers for reading/writing the "registered users" store 
+// ---------- Helpers for reading/writing the "registered users" store ----------
 
 function getUsers() {
   return JSON.parse(localStorage.getItem('registeredUsers')) || {};
