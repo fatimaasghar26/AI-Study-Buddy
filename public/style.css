@@ -66,18 +66,22 @@ body {
   overflow-y: auto;
   text-align: left;
   margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
 }
 
 .bot {
   color: #333;
   margin: 10px 0;
   padding: 12px 16px;
-  background-color: #E5E5EA; 
-  border-radius: 18px;       
-  display: inline-block;   
-  max-width: 80%;        
-  word-wrap: break-word;     
-  box-shadow: 0 1px 2px rgba(0,0,0,0.1);  
+  background-color: #E5E5EA;
+  border-radius: 18px;
+  display: inline-block;
+  max-width: 80%;
+  word-wrap: break-word;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .user {
@@ -86,12 +90,37 @@ body {
   margin: 10px 0;
   padding: 12px 16px;
   background-color: #1f2235;
-  color: white;                
-  border-radius: 18px;         
-  display: inline-block;     
+  color: white;
+  border-radius: 18px;
+  display: inline-block;
   max-width: 80%;
   word-wrap: break-word;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Wrapper for each message row */
+.msg-row {
+  display: flex;
+  width: 100%;
+}
+
+.msg-row.bot-row {
+  justify-content: flex-start;
+}
+
+.msg-row.user-row {
+  justify-content: flex-end;
+}
+
+.bot,
+.user {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.bot.thinking {
+  color: #888;
+  font-style: italic;
 }
 
 .input-area {
@@ -196,17 +225,62 @@ body {
     color: white;
   }
 }
+
 /* ACCOUNT PAGE */
 
 .account-container {
   width: 90%;
   max-width: 400px;
-  margin: 60px auto;   /* centers horizontally */
+  margin: 60px auto;
   background: white;
   border-radius: 10px;
   padding: 25px 50px 50px 25px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: left;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-field input {
+  padding-right: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  color: #1f2235;
+  padding: 0;
+}
+
+.pfp {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#pfpPreview {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+
+.change-pfp-btn {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
 }
 
 /* Inputs full width */
@@ -249,7 +323,7 @@ body {
 .account-container button[type="button"] {
   background-color: #ccc;
 }
-    
+
 /* Study Planner */
 .planner-container {
   width: 90%;
@@ -372,7 +446,7 @@ body {
 }
 
 .task-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .task-done {
@@ -415,9 +489,20 @@ body {
   font-weight: bold;
 }
 
-.priority-low    { background: #e0f5e9; color: #2e7d32; }
-.priority-medium { background: #fff8e1; color: #f57f17; }
-.priority-high   { background: #fdecea; color: #c62828; }
+.priority-low {
+  background: #e0f5e9;
+  color: #2e7d32;
+}
+
+.priority-medium {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.priority-high {
+  background: #fdecea;
+  color: #c62828;
+}
 
 .delete-btn {
   background: none;
@@ -433,10 +518,22 @@ body {
 }
 
 @media (max-width: 600px) {
-  .form-row { flex-direction: column; }
-  .task-card { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .task-right { width: 100%; justify-content: space-between; }
+  .form-row {
+    flex-direction: column;
+  }
+
+  .task-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .task-right {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
+
 /* Timer */
 .timer-container {
   width: 90%;
@@ -445,7 +542,7 @@ body {
   background: white;
   border-radius: 10px;
   padding: 30px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
@@ -612,6 +709,11 @@ body {
 }
 
 @media (max-width: 480px) {
-  .time-display { font-size: 52px; }
-  .ctrl-btn { padding: 10px 18px; }
+  .time-display {
+    font-size: 52px;
+  }
+
+  .ctrl-btn {
+    padding: 10px 18px;
+  }
 }
