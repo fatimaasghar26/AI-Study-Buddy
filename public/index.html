@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI Study Buddy: ask study questions in an AI chat, plan your week with a task planner, and stay focused with a Pomodoro-style timer.">
   <title>AI Study Buddy</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -18,8 +19,6 @@
       <li><a href="Account.html">Account</a></li>
     </ul>
   </nav>
-
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-content">
       <p class="hero-eyebrow">Your study session, organized</p>
@@ -33,36 +32,60 @@
       </div>
     </div>
   </section>
-
-  <!-- FEATURES -->
   <div class="container">
-    <div class="card">
-      <a href="AI_Chat.html">AI Chat</a>
+    <a class="card" href="AI_Chat.html">
+      <svg class="card-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M4 5h16v11H8l-4 4V5z" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span class="card-title">AI Chat</span>
       <p>Ask questions that are confusing you and get help with your studies.</p>
-    </div>
-
-    <div class="card">
-      <a href="Study_Planner.html">Study Planner</a>
+    </a>
+    <a class="card" href="Study_Planner.html">
+      <svg class="card-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="4" y="5" width="16" height="15" rx="1.5" stroke-linejoin="round"/>
+        <path d="M4 9.5h16M8 3v3.5M16 3v3.5" stroke-linecap="round"/>
+        <path d="M7.5 13h4M7.5 16.5h7" stroke-linecap="round"/>
+      </svg>
+      <span class="card-title">Study Planner</span>
       <p>Organize your tasks and assignments to stay on track.</p>
-    </div>
-
-    <div class="card">
-      <a href="Study_Timer.html">Study Timer</a>
+    </a>
+    <a class="card" href="Study_Timer.html">
+      <svg class="card-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="13" r="8" stroke-linejoin="round"/>
+        <path d="M12 9v4l3 2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9.5 2.5h5" stroke-linecap="round"/>
+      </svg>
+      <span class="card-title">Study Timer</span>
       <p>Stay focused while studying to improve your concentration.</p>
-    </div>
+    </a>
   </div>
-
-  <!-- WHY IT HELPS -->
   <section class="highlights">
     <div class="highlight-item">
+      <svg class="highlight-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="7" stroke-linejoin="round"/>
+        <path d="M16 16l5 5" stroke-linecap="round"/>
+        <path d="M9 11h4M11 9v4" stroke-linecap="round"/>
+      </svg>
       <h3>Ask, don't search</h3>
       <p>Get a clear, step-by-step explanation instead of digging through ten tabs.</p>
     </div>
     <div class="highlight-item">
+      <svg class="highlight-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="5" cy="6" r="1.5" fill="currentColor" stroke="none"/>
+        <path d="M9 6h10" stroke-linecap="round"/>
+        <circle cx="5" cy="13" r="1.5" fill="currentColor" stroke="none"/>
+        <path d="M9 13h10" stroke-linecap="round"/>
+        <circle cx="5" cy="20" r="1.5" fill="currentColor" stroke="none"/>
+        <path d="M9 20h10" stroke-linecap="round"/>
+      </svg>
       <h3>One list, not five</h3>
       <p>Every assignment and due date lives in a single planner you actually check.</p>
     </div>
     <div class="highlight-item">
+      <svg class="highlight-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="12" cy="12" r="8" stroke-linejoin="round"/>
+        <path d="M12 8v4l2.5 1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <h3>Built-in focus</h3>
       <p>Custom or Pomodoro timers keep sessions honest, with a running log of what you finished.</p>
     </div>
@@ -73,7 +96,6 @@
   </footer>
 
   <script>
-    // Personalize the hero if the person is already logged in.
     document.addEventListener('DOMContentLoaded', () => {
       const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
       const email = sessionStorage.getItem('userEmail');
