@@ -8,18 +8,19 @@ const conversationHistory = [
     content: "You are AI Study Buddy, a helpful study assistant for university students. Answer questions clearly and concisely. Explain concepts step by step when needed, and keep responses easy to understand."
   }
 ];
+
 function appendMessage(text, role) {
   const row = document.createElement("div");
   row.className = `msg-row ${role === "user" ? "user-row" : "bot-row"}`;
   const bubble = document.createElement("p");
   bubble.className = role === "user" ? "user" : "bot";
-  
+
   if (role === "bot") {
     bubble.innerHTML = marked.parse(text);
   } else {
     bubble.textContent = text;
   }
-  
+
   row.appendChild(bubble);
   chatBox.appendChild(row);
   chatBox.scrollTop = chatBox.scrollHeight;
@@ -55,7 +56,7 @@ async function sendMessage() {
       conversationHistory.pop();
     } else {
       const reply = data?.reply || "I couldn't generate a response. Try again.";
-      thinkingBubble.textContent = reply;
+      thinkingBubble.innerHTML = marked.parse(reply);
       thinkingBubble.classList.remove("thinking");
       conversationHistory.push({ role: "assistant", content: reply });
     }
