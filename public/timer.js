@@ -168,7 +168,6 @@ function resetTimer() {
   bar.style.width = "0%";
   loadPhase();
 }
-
 var focusMinutesInput = document.getElementById("focusMinutes");
 if (focusMinutesInput) {
   focusMinutesInput.addEventListener("change", function () {
@@ -177,9 +176,7 @@ if (focusMinutesInput) {
     }
   });
 }
-
 start.addEventListener("click", startTimer);
 pause.addEventListener("click", stopTimer);
 reset.addEventListener("click", resetTimer);
-
 loadPhase();
