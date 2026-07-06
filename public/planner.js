@@ -3,7 +3,6 @@ let currentFilter = 'all';
 function saveTasks() {
   localStorage.setItem('studyTasks', JSON.stringify(tasks));
 }
-
 function addTask() {
   let name = document.getElementById('taskName').value.trim();
   let subject = document.getElementById('taskSubject').value.trim();
@@ -32,7 +31,6 @@ function addTask() {
   document.getElementById('taskDate').value = '';
   document.getElementById('taskPriority').value = 'Medium';
 }
-
 function toggleDone(id) {
   for (let t of tasks) {
     if (t.id === id) {
@@ -49,7 +47,6 @@ function deleteTask(id) {
   saveTasks();
   renderTasks();
 }
-
 function filterTasks(filter, btn) {
   currentFilter = filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -78,9 +75,7 @@ function renderTasks() {
       let d = new Date(task.date);
       dateStr = d.toDateString();
     }
-
     let priorityClass = 'priority-' + task.priority.toLowerCase();
-
     card.innerHTML = `
       <div>
         <input type="checkbox" ${task.done ? 'checked' : ''}
@@ -104,7 +99,6 @@ function renderTasks() {
     list.appendChild(card);
   });
 }
-
 function escapeHTML(str) {
   return str
     .replace(/&/g, "&amp;")
@@ -112,7 +106,6 @@ function escapeHTML(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
-
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('taskName').addEventListener('keydown', e => {
     if (e.key === 'Enter') addTask();
