@@ -37,7 +37,7 @@ async function sendMessage() {
   conversationHistory.push({ role: "user", content: userText });
 
   try {
-    const response = await fetch("/groq-chat", {
+    const response = await fetch("/api/groq-chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ messages: conversationHistory })
