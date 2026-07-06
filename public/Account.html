@@ -11,11 +11,11 @@
   <nav class="nav-container">
     <h1 class="logo">AI Study Buddy</h1>
     <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="primaryNav">
-  <span class="bar"></span>
-  <span class="bar"></span>
-  <span class="bar"></span>
-</button>
-    <ul class="navbar">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </button>
+    <ul class="navbar" id="primaryNav">
       <li><a href="index.html">Home</a></li>
       <li><a href="AI_Chat.html">AI Chat</a></li>
       <li><a href="Study_Planner.html">Study Planner</a></li>
@@ -58,11 +58,7 @@
       <a href="#" id="toggleLink" style="color:#1f2235; font-weight:bold;">Log In</a>
     </p>
   </div>
-
-  <!-- ── PROFILE SECTION (shown when logged in) ── -->
   <div class="account-container" id="profileSection" style="display:none; max-width:480px;">
-
-    <!-- Profile Picture -->
     <div style="text-align:center; margin-bottom:20px;">
       <img id="pfpPreview" src="https://via.placeholder.com/100" alt="Profile Picture"
            style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #ccc;">
@@ -74,8 +70,6 @@
     </div>
 
     <hr>
-
-    <!-- Name & Email -->
     <h3 style="margin:0 0 14px; color:#1f2235;">Profile Info</h3>
 
     <label>Email</label>
@@ -94,8 +88,6 @@
     </div>
 
     <hr style="margin-top:24px;">
-
-    <!-- Change Password -->
     <h3 style="margin:0 0 14px; color:#1f2235;">Change Password</h3>
 
     <label>Current Password</label>
@@ -113,15 +105,13 @@
     </div>
 
     <hr style="margin-top:24px;">
-
-    <!-- Log Out & Delete -->
     <div class="clearfix">
       <button type="button" id="logoutBtn">Log Out</button>
       <button type="button" id="deleteAccountBtn"
               style="background-color:#c62828; color:white;">Delete Account</button>
     </div>
   </div>
-  <script src="nav-toggle.js"></script>
   <script src="account.js"></script>
+<script src="nav-toggle.js"></script>
 </body>
 </html>
