@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Study Buddy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav class="nav-container">
+    <h1 class="logo">AI Study Buddy</h1>
+    <ul class="navbar">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="AI_Chat.html">AI Chat</a></li>
+      <li><a href="Study_Planner.html">Study Planner</a></li>
+      <li><a href="Study_Timer.html">Study Timer</a></li>
+      <li><a href="Account.html">Account</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Your study session, organized</p>
+      <h2 class="hero-title" id="heroTitle">Study smarter, not longer.</h2>
+      <p class="hero-sub" id="heroSub">
+        Ask a question, plan the week, and run a focus timer — one place for the whole study session, no tab-switching required.
+      </p>
+      <div class="hero-cta">
+        <a href="AI_Chat.html" class="btn-primary" id="ctaPrimary">Start a Chat</a>
+        <a href="Account.html" class="btn-secondary" id="ctaSecondary">Create free account</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <div class="container">
+    <div class="card">
+      <a href="AI_Chat.html">AI Chat</a>
+      <p>Ask questions that are confusing you and get help with your studies.</p>
+    </div>
+
+    <div class="card">
+      <a href="Study_Planner.html">Study Planner</a>
+      <p>Organize your tasks and assignments to stay on track.</p>
+    </div>
+
+    <div class="card">
+      <a href="Study_Timer.html">Study Timer</a>
+      <p>Stay focused while studying to improve your concentration.</p>
+    </div>
+  </div>
+
+  <!-- WHY IT HELPS -->
+  <section class="highlights">
+    <div class="highlight-item">
+      <h3>Ask, don't search</h3>
+      <p>Get a clear, step-by-step explanation instead of digging through ten tabs.</p>
+    </div>
+    <div class="highlight-item">
+      <h3>One list, not five</h3>
+      <p>Every assignment and due date lives in a single planner you actually check.</p>
+    </div>
+    <div class="highlight-item">
+      <h3>Built-in focus</h3>
+      <p>Custom or Pomodoro timers keep sessions honest, with a running log of what you finished.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>&copy; 2026 AI Study Buddy. Built for late-night study sessions.</p>
+  </footer>
+
+  <script>
+    // Personalize the hero if the person is already logged in.
+    document.addEventListener('DOMContentLoaded', () => {
+      const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
+      const email = sessionStorage.getItem('userEmail');
+
+      if (loggedIn && email) {
+        const users = JSON.parse(localStorage.getItem('registeredUsers')) || {};
+        const firstName = users[email]?.profile?.firstName;
+        const name = firstName ? firstName : email.split('@')[0];
+
+        document.getElementById('heroTitle').textContent = `Welcome back, ${name}.`;
+        document.getElementById('heroSub').textContent =
+          'Pick up where you left off — jump into a chat, check your planner, or start a focus session.';
+        document.getElementById('ctaSecondary').textContent = 'View Account';
+        document.getElementById('ctaSecondary').href = 'Account.html';
+      }
+    });
+  </script>
+
+</body>
+</html>
