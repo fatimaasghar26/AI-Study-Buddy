@@ -1,13 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   const currentUserEmail = sessionStorage.getItem('userEmail');
-
   showCorrectSection(currentUserEmail);
   setupAuthForm();
   setupProfileForm(currentUserEmail);
 });
-
-// ---------- Helpers for reading/writing the "registered users" store ----------
-
 function getUsers() {
   return JSON.parse(localStorage.getItem('registeredUsers')) || {};
 }
@@ -15,9 +11,6 @@ function getUsers() {
 function saveUsers(users) {
   localStorage.setItem('registeredUsers', JSON.stringify(users));
 }
-
-// ---------- Showing the right section on page load ----------
-
 function showCorrectSection(currentUserEmail) {
   const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
   const authSection = document.getElementById('authSection');
@@ -32,9 +25,6 @@ function showCorrectSection(currentUserEmail) {
     profileSection.style.display = 'none';
   }
 }
-
-// ---------- Sign up / log in form ----------
-
 function setupAuthForm() {
   const formTitle = document.getElementById('formTitle');
   const submitBtn = document.getElementById('submitBtn');
@@ -50,7 +40,6 @@ function setupAuthForm() {
     const isCurrentlySignUp = formTitle.innerText === 'Sign Up';
 
     if (isCurrentlySignUp) {
-      // Switch to Log In mode
       formTitle.innerText = 'Log In';
       submitBtn.innerText = 'Log In';
       toggleLink.innerText = 'Sign Up';
@@ -60,7 +49,6 @@ function setupAuthForm() {
       rememberGroup.style.display = 'none';
       termsText.style.display = 'none';
     } else {
-      // Switch to Sign Up mode
       formTitle.innerText = 'Sign Up';
       submitBtn.innerText = 'Sign Up';
       toggleLink.innerText = 'Log In';
@@ -136,16 +124,11 @@ function handleLogIn() {
     alert('Invalid email or password.');
   }
 }
-
-// ---------- Profile view/edit (shown after logging in) ----------
-
 function loadProfile(email) {
   const users = getUsers();
   document.getElementById('profileEmailInput').value = email;
-
   const profile = users[email]?.profile;
   if (!profile) return;
-
   if (profile.firstName) document.getElementById('firstNameInput').value = profile.firstName;
   if (profile.lastName) document.getElementById('lastNameInput').value = profile.lastName;
   if (profile.pfp) document.getElementById('pfpPreview').src = profile.pfp;
@@ -231,7 +214,6 @@ function deleteAccount(currentUserEmail) {
     delete users[currentUserEmail];
     saveUsers(users);
   }
-
   sessionStorage.clear();
   alert('Account deleted.');
   window.location.reload();
