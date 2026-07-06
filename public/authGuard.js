@@ -1,7 +1,3 @@
-// Blocks certain buttons until the user is logged in.
-// Used across pages that have actions requiring an account
-// (adding tasks, sending chat messages, starting the timer).
-
 function isLoggedIn() {
   return sessionStorage.getItem('loggedIn') === 'true';
 }
@@ -14,8 +10,6 @@ function requireLogin(actionName) {
   }
   return true;
 }
-
-// Maps a button's id to the label shown in the login prompt.
 const guardedButtons = {
   addTaskBtn: 'Add Task',
   sendBtn: 'Send Message',
