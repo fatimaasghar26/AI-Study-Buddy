@@ -11,8 +11,7 @@ const RATE_LIMIT_MAX_REQUESTS = 10;     // per IP, per window
 const SYSTEM_PROMPT =
   'You are AI Study Buddy, a helpful study assistant for university students. ' +
   'Answer questions clearly and concisely. Explain concepts step by step when needed, ' +
-  'and keep responses easy to understand. Explain concept related to study strictly no other,' +
-  'conversations unrelated to study ';
+  'and keep responses easy to understand.';
 
 const requestLog = new Map(); // ip -> array of timestamps
 
