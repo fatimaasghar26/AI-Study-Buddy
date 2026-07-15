@@ -11,6 +11,18 @@ function getUsers() {
 function saveUsers(users) {
   localStorage.setItem('registeredUsers', JSON.stringify(users));
 }
+
+function generateSalt() {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function hashPassword(password, salt) {
+  const data = new TextEncoder().encode(salt + password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+}
 function showCorrectSection(currentUserEmail) {
   const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
   const authSection = document.getElementById('authSection');
@@ -66,17 +78,17 @@ function setupAuthForm() {
     document.getElementById('repeatPasswordInput').value = '';
   });
 
-  submitBtn.addEventListener('click', () => {
+  submitBtn.addEventListener('click', async () => {
     const isSignUp = formTitle.innerText === 'Sign Up';
     if (isSignUp) {
-      handleSignUp(toggleLink);
+      await handleSignUp(toggleLink);
     } else {
-      handleLogIn();
+      await handleLogIn();
     }
   });
 }
 
-function handleSignUp(toggleLink) {
+async function handleSignUp(toggleLink) {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   const pass = document.getElementById('passwordInput').value;
   const repeatPass = document.getElementById('repeatPasswordInput').value;
@@ -96,9 +108,13 @@ function handleSignUp(toggleLink) {
     return;
   }
 
+  const salt = generateSalt();
+  const passwordHash = await hashPassword(pass, salt);
+
   users[email] = {
-    password: pass,
-    profile: { firstName: '', lastName: '', pfp: 'https://via.placeholder.com/100' }
+    passwordHash,
+    salt,
+    profile: { firstName: '', lastName: '', pfp: 'icon.png' }
   };
   saveUsers(users);
 
@@ -106,7 +122,7 @@ function handleSignUp(toggleLink) {
   toggleLink.click();
 }
 
-function handleLogIn() {
+async function handleLogIn() {
   const email = document.getElementById('emailInput').value.trim().toLowerCase();
   const pass = document.getElementById('passwordInput').value;
 
@@ -116,13 +132,19 @@ function handleLogIn() {
   }
 
   const users = getUsers();
-  if (users[email] && users[email].password === pass) {
-    sessionStorage.setItem('loggedIn', 'true');
-    sessionStorage.setItem('userEmail', email);
-    window.location.reload();
-  } else {
-    alert('Invalid email or password.');
+  const user = users[email];
+
+  if (user) {
+    const enteredHash = await hashPassword(pass, user.salt);
+    if (enteredHash === user.passwordHash) {
+      sessionStorage.setItem('loggedIn', 'true');
+      sessionStorage.setItem('userEmail', email);
+      window.location.reload();
+      return;
+    }
   }
+
+  alert('Invalid email or password.');
 }
 function loadProfile(email) {
   const users = getUsers();
@@ -159,8 +181,8 @@ function setupProfileForm(currentUserEmail) {
     alert('Profile saved!');
   });
 
-  document.getElementById('changePassBtn').addEventListener('click', () => {
-    changePassword(currentUserEmail);
+  document.getElementById('changePassBtn').addEventListener('click', async () => {
+    await changePassword(currentUserEmail);
   });
 
   document.getElementById('logoutBtn').addEventListener('click', () => {
@@ -173,7 +195,7 @@ function setupProfileForm(currentUserEmail) {
   });
 }
 
-function changePassword(currentUserEmail) {
+async function changePassword(currentUserEmail) {
   const current = document.getElementById('currentPassInput').value;
   const newPass = document.getElementById('newPassInput').value;
   const confirmPass = document.getElementById('confirmPassInput').value;
@@ -184,9 +206,11 @@ function changePassword(currentUserEmail) {
   }
 
   const users = getUsers();
-  if (!users[currentUserEmail]) return;
+  const user = users[currentUserEmail];
+  if (!user) return;
 
-  if (users[currentUserEmail].password !== current) {
+  const currentHash = await hashPassword(current, user.salt);
+  if (currentHash !== user.passwordHash) {
     alert('Current password is incorrect.');
     return;
   }
@@ -195,7 +219,9 @@ function changePassword(currentUserEmail) {
     return;
   }
 
-  users[currentUserEmail].password = newPass;
+  const newSalt = generateSalt();
+  user.passwordHash = await hashPassword(newPass, newSalt);
+  user.salt = newSalt;
   saveUsers(users);
   alert('Password changed successfully!');
 
