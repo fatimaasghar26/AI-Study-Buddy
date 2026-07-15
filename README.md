@@ -7,9 +7,13 @@ AI Study Buddy is a lightweight, all-in-one web app for students — ask study q
 🔗 **Live app:** [ai-study-buddy-beta-hazel.vercel.app](https://ai-study-buddy-beta-hazel.vercel.app/)
 
 ![Status](https://img.shields.io/badge/status-in%20development-yellow)
+
 ![Made with](https://img.shields.io/badge/frontend-HTML%2FCSS%2FJS-blue)
+
 ![Backend](https://img.shields.io/badge/backend-Vercel%20Serverless-black)
+
 ![AI](https://img.shields.io/badge/AI-Groq%20(Llama%203.3%2070B)-orange)
+
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
