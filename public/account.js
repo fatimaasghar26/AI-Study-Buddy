@@ -114,7 +114,7 @@ async function handleSignUp(toggleLink) {
   users[email] = {
     passwordHash,
     salt,
-    profile: { firstName: '', lastName: '', pfp: 'icon.png' }
+    profile: { firstName: '', lastName: '', pfp: 'icon.webp' }
   };
   saveUsers(users);
 
