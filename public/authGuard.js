@@ -1,5 +1,16 @@
+
+let currentSession = null;
+
+db.auth.getSession().then(({ data }) => {
+  currentSession = data.session;
+});
+
+db.auth.onAuthStateChange((_event, session) => {
+  currentSession = session;
+});
+
 function isLoggedIn() {
-  return sessionStorage.getItem('loggedIn') === 'true';
+  return !!currentSession;
 }
 
 function requireLogin(actionName) {
@@ -10,6 +21,7 @@ function requireLogin(actionName) {
   }
   return true;
 }
+
 const guardedButtons = {
   addTaskBtn: 'Add Task',
   sendBtn: 'Send Message',
