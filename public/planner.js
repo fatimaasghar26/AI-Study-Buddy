@@ -1,9 +1,51 @@
-let tasks = JSON.parse(localStorage.getItem('studyTasks')) || [];
+// Tasks now live in Supabase's `tasks` table, scoped per user by RLS,
+// instead of one shared localStorage key. `db` comes from
+// supabaseClient.js, loaded earlier.
+
+let tasks = [];
 let currentFilter = 'all';
-function saveTasks() {
-  localStorage.setItem('studyTasks', JSON.stringify(tasks));
+
+async function loadTasks() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    // Not logged in: authGuard blocks the Add Task button already, but
+    // someone can still land on this page directly, so show nothing
+    // instead of throwing on the query below.
+    tasks = [];
+    renderTasks();
+    return;
+  }
+
+  const { data, error } = await db
+    .from('tasks')
+    .select('*')
+    .order('due_date', { ascending: true });
+
+  if (error) {
+    console.error('Could not load tasks:', error.message);
+    return;
+  }
+
+  // Map DB column names (name, subject, due_date, priority, done) onto
+  // the same shape the rest of this file already expects.
+  tasks = data.map(t => ({
+    id: t.id,
+    name: t.name,
+    subject: t.subject,
+    date: t.due_date,
+    priority: t.priority,
+    done: t.done
+  }));
+  renderTasks();
 }
-function addTask() {
+
+async function addTask() {
+  const { data: { session } } = await db.auth.getSession();
+  if (!session) {
+    alert('Please log in first.');
+    return;
+  }
+
   let name = document.getElementById('taskName').value.trim();
   let subject = document.getElementById('taskSubject').value.trim();
   let date = document.getElementById('taskDate').value;
@@ -14,16 +56,28 @@ function addTask() {
     return;
   }
 
-  tasks.push({
-    id: Date.now(),
+  const { data, error } = await db.from('tasks').insert({
+    user_id: session.user.id,
     name,
     subject,
-    date,
+    due_date: date || null,
     priority,
     done: false
-  });
+  }).select().single();
 
-  saveTasks();
+  if (error) {
+    alert('Could not add task: ' + error.message);
+    return;
+  }
+
+  tasks.push({
+    id: data.id,
+    name: data.name,
+    subject: data.subject,
+    date: data.due_date,
+    priority: data.priority,
+    done: data.done
+  });
   renderTasks();
 
   document.getElementById('taskName').value = '';
@@ -31,28 +85,42 @@ function addTask() {
   document.getElementById('taskDate').value = '';
   document.getElementById('taskPriority').value = 'Medium';
 }
-function toggleDone(id) {
-  for (let t of tasks) {
-    if (t.id === id) {
-      t.done = !t.done;
-      break;
-    }
+
+async function toggleDone(id) {
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+
+  const newDone = !task.done;
+  const { error } = await db.from('tasks').update({ done: newDone }).eq('id', id);
+
+  if (error) {
+    alert('Could not update task: ' + error.message);
+    return;
   }
-  saveTasks();
+
+  task.done = newDone;
   renderTasks();
 }
 
-function deleteTask(id) {
+async function deleteTask(id) {
+  const { error } = await db.from('tasks').delete().eq('id', id);
+
+  if (error) {
+    alert('Could not delete task: ' + error.message);
+    return;
+  }
+
   tasks = tasks.filter(t => t.id !== id);
-  saveTasks();
   renderTasks();
 }
+
 function filterTasks(filter, btn) {
   currentFilter = filter;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderTasks();
 }
+
 function renderTasks() {
   let list = document.getElementById('taskList');
   let emptyMsg = document.getElementById('emptyMsg');
@@ -99,6 +167,7 @@ function renderTasks() {
     list.appendChild(card);
   });
 }
+
 function escapeHTML(str) {
   return str
     .replace(/&/g, "&amp;")
@@ -106,9 +175,10 @@ function escapeHTML(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
 }
+
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('taskName').addEventListener('keydown', e => {
     if (e.key === 'Enter') addTask();
   });
-  renderTasks(); 
-}); 
+  loadTasks();
+});
