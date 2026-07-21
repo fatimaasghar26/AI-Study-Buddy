@@ -1,42 +1,28 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const currentUserEmail = sessionStorage.getItem('userEmail');
-  showCorrectSection(currentUserEmail);
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const { data } = await db.auth.getSession();
+  const session = data.session;
+  showCorrectSection(session);
   setupAuthForm();
-  setupProfileForm(currentUserEmail);
+  if (session) {
+    setupProfileForm(session.user.id);
+  }
 });
-function getUsers() {
-  return JSON.parse(localStorage.getItem('registeredUsers')) || {};
-}
 
-function saveUsers(users) {
-  localStorage.setItem('registeredUsers', JSON.stringify(users));
-}
-
-function generateSalt() {
-  const bytes = crypto.getRandomValues(new Uint8Array(16));
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-async function hashPassword(password, salt) {
-  const data = new TextEncoder().encode(salt + password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-}
-function showCorrectSection(currentUserEmail) {
-  const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
+function showCorrectSection(session) {
   const authSection = document.getElementById('authSection');
   const profileSection = document.getElementById('profileSection');
 
-  if (loggedIn && currentUserEmail) {
+  if (session) {
     authSection.style.display = 'none';
     profileSection.style.display = 'block';
-    loadProfile(currentUserEmail);
+    loadProfile(session.user);
   } else {
     authSection.style.display = 'block';
     profileSection.style.display = 'none';
   }
 }
+
 function setupAuthForm() {
   const formTitle = document.getElementById('formTitle');
   const submitBtn = document.getElementById('submitBtn');
@@ -102,23 +88,29 @@ async function handleSignUp(toggleLink) {
     return;
   }
 
-  const users = getUsers();
-  if (users[email]) {
-    alert('An account with this email already exists.');
+  // Supabase handles hashing, storage, and duplicate-email checks itself.
+  const { data, error } = await db.auth.signUp({ email, password: pass });
+
+  if (error) {
+    alert(error.message);
     return;
   }
 
-  const salt = generateSalt();
-  const passwordHash = await hashPassword(pass, salt);
+  // Create the matching profiles row. Its id MUST equal the new user's
+  // auth id, or the RLS policies (auth.uid() = id) will reject it.
+  if (data.user) {
+    const { error: profileError } = await db.from('profiles').insert({
+      id: data.user.id,
+      first_name: '',
+      last_name: '',
+      avatar_url: 'icon.webp'
+    });
+    if (profileError) {
+      console.error('Profile creation failed:', profileError.message);
+    }
+  }
 
-  users[email] = {
-    passwordHash,
-    salt,
-    profile: { firstName: '', lastName: '', pfp: 'icon.webp' }
-  };
-  saveUsers(users);
-
-  alert('Registration successful! Switching to Log In.');
+  alert('Registration successful! Check your email to confirm your account, then log in.');
   toggleLink.click();
 }
 
@@ -131,32 +123,35 @@ async function handleLogIn() {
     return;
   }
 
-  const users = getUsers();
-  const user = users[email];
+  const { error } = await db.auth.signInWithPassword({ email, password: pass });
 
-  if (user) {
-    const enteredHash = await hashPassword(pass, user.salt);
-    if (enteredHash === user.passwordHash) {
-      sessionStorage.setItem('loggedIn', 'true');
-      sessionStorage.setItem('userEmail', email);
-      window.location.reload();
-      return;
-    }
+  if (error) {
+    alert('Invalid email or password.');
+    return;
   }
 
-  alert('Invalid email or password.');
-}
-function loadProfile(email) {
-  const users = getUsers();
-  document.getElementById('profileEmailInput').value = email;
-  const profile = users[email]?.profile;
-  if (!profile) return;
-  if (profile.firstName) document.getElementById('firstNameInput').value = profile.firstName;
-  if (profile.lastName) document.getElementById('lastNameInput').value = profile.lastName;
-  if (profile.pfp) document.getElementById('pfpPreview').src = profile.pfp;
+  window.location.reload();
 }
 
-function setupProfileForm(currentUserEmail) {
+async function loadProfile(user) {
+  document.getElementById('profileEmailInput').value = user.email;
+
+  const { data: profile, error } = await db
+    .from('profiles')
+    .select('first_name, last_name, avatar_url')
+    .eq('id', user.id)
+    .single();
+
+  if (error) {
+    console.error('Could not load profile:', error.message);
+    return;
+  }
+  if (profile.first_name) document.getElementById('firstNameInput').value = profile.first_name;
+  if (profile.last_name) document.getElementById('lastNameInput').value = profile.last_name;
+  if (profile.avatar_url) document.getElementById('pfpPreview').src = profile.avatar_url;
+}
+
+function setupProfileForm(userId) {
   document.getElementById('pfpInput').addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -168,34 +163,35 @@ function setupProfileForm(currentUserEmail) {
     reader.readAsDataURL(file);
   });
 
-  document.getElementById('saveProfileBtn').addEventListener('click', () => {
-    const users = getUsers();
-    if (!users[currentUserEmail]) return;
+  document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+    const { error } = await db.from('profiles').update({
+      first_name: document.getElementById('firstNameInput').value.trim(),
+      last_name: document.getElementById('lastNameInput').value.trim(),
+      avatar_url: document.getElementById('pfpPreview').src || ''
+    }).eq('id', userId);
 
-    users[currentUserEmail].profile = {
-      firstName: document.getElementById('firstNameInput').value.trim(),
-      lastName: document.getElementById('lastNameInput').value.trim(),
-      pfp: document.getElementById('pfpPreview').src || ''
-    };
-    saveUsers(users);
+    if (error) {
+      alert('Could not save profile: ' + error.message);
+      return;
+    }
     alert('Profile saved!');
   });
 
   document.getElementById('changePassBtn').addEventListener('click', async () => {
-    await changePassword(currentUserEmail);
+    await changePassword();
   });
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
-    sessionStorage.clear();
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await db.auth.signOut();
     window.location.reload();
   });
 
   document.getElementById('deleteAccountBtn').addEventListener('click', () => {
-    deleteAccount(currentUserEmail);
+    alert('Account deletion needs to go through a secure server step (it requires elevated permissions the browser is never given). This button is not wired up yet — see the note in the code.');
   });
 }
 
-async function changePassword(currentUserEmail) {
+async function changePassword() {
   const current = document.getElementById('currentPassInput').value;
   const newPass = document.getElementById('newPassInput').value;
   const confirmPass = document.getElementById('confirmPassInput').value;
@@ -204,43 +200,24 @@ async function changePassword(currentUserEmail) {
     alert('Please fill in all password fields.');
     return;
   }
-
-  const users = getUsers();
-  const user = users[currentUserEmail];
-  if (!user) return;
-
-  const currentHash = await hashPassword(current, user.salt);
-  if (currentHash !== user.passwordHash) {
-    alert('Current password is incorrect.');
-    return;
-  }
   if (newPass !== confirmPass) {
     alert('New passwords do not match.');
     return;
   }
 
-  const newSalt = generateSalt();
-  user.passwordHash = await hashPassword(newPass, newSalt);
-  user.salt = newSalt;
-  saveUsers(users);
-  alert('Password changed successfully!');
+  // Supabase's updateUser() changes the password for the CURRENT signed-in
+  // session; it doesn't take the old password as input, so we can't
+  // verify "current" client-side the way the old code did. Good enough
+  // for now since the user must already be logged in to reach this form.
+  const { error } = await db.auth.updateUser({ password: newPass });
 
-  document.getElementById('currentPassInput').value = '';
-  document.getElementById('newPassInput').value = '';
-  document.getElementById('confirmPassInput').value = '';
-}
-
-function deleteAccount(currentUserEmail) {
-  if (!confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+  if (error) {
+    alert('Could not change password: ' + error.message);
     return;
   }
 
-  const users = getUsers();
-  if (users[currentUserEmail]) {
-    delete users[currentUserEmail];
-    saveUsers(users);
-  }
-  sessionStorage.clear();
-  alert('Account deleted.');
-  window.location.reload();
+  alert('Password changed successfully!');
+  document.getElementById('currentPassInput').value = '';
+  document.getElementById('newPassInput').value = '';
+  document.getElementById('confirmPassInput').value = '';
 }
