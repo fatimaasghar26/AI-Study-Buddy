@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', async () => {
   const { data } = await db.auth.getSession();
   const session = data.session;
@@ -164,6 +163,11 @@ function setupProfileForm(userId) {
   });
 
   document.getElementById('saveProfileBtn').addEventListener('click', async () => {
+    // NOTE: this stores the profile picture as a base64 data URL string in
+    // the avatar_url text column, same as the original localStorage version
+    // did. That works but bloats the row. If you want real image hosting
+    // later, switch to Supabase Storage and save just the file's public
+    // URL here instead.
     const { error } = await db.from('profiles').update({
       first_name: document.getElementById('firstNameInput').value.trim(),
       last_name: document.getElementById('lastNameInput').value.trim(),
@@ -205,10 +209,6 @@ async function changePassword() {
     return;
   }
 
-  // Supabase's updateUser() changes the password for the CURRENT signed-in
-  // session; it doesn't take the old password as input, so we can't
-  // verify "current" client-side the way the old code did. Good enough
-  // for now since the user must already be logged in to reach this form.
   const { error } = await db.auth.updateUser({ password: newPass });
 
   if (error) {
