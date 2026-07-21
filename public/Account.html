@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Study Buddy</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
   <script src="authGuard.js"></script>
 </head>
+
 <body>
   <nav class="nav-container">
     <h1 class="logo">AI Study Buddy</h1>
@@ -23,7 +27,7 @@
       <li><a class="active" href="Account.html">Account</a></li>
     </ul>
   </nav>
-  
+
   <div class="account-container" id="authSection">
     <h1 id="formTitle">Sign Up</h1>
     <p id="formSubtitle">Please fill in this form to create your account.</p>
@@ -61,7 +65,7 @@
   <div class="account-container" id="profileSection" style="display:none; max-width:480px;">
     <div style="text-align:center; margin-bottom:20px;">
       <img id="pfpPreview" src="icon.webp" alt="Profile Picture"
-           style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #ccc;">
+        style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:2px solid #ccc;">
       <br>
       <label style="display:inline-block; margin-top:10px; font-size:13px; color:#555; cursor:pointer;">
         Change Photo
@@ -73,8 +77,7 @@
     <h3 style="margin:0 0 14px; color:#1f2235;">Profile Info</h3>
 
     <label>Email</label>
-    <input type="email" id="profileEmailInput" readonly
-           style="background:#f5f5f5; color:#888; cursor:not-allowed;">
+    <input type="email" id="profileEmailInput" readonly style="background:#f5f5f5; color:#888; cursor:not-allowed;">
 
     <label>First Name</label>
     <input type="text" id="firstNameInput" placeholder="Enter First Name">
@@ -83,8 +86,7 @@
     <input type="text" id="lastNameInput" placeholder="Enter Last Name">
 
     <div class="clearfix" style="margin-top:4px;">
-      <button type="button" id="saveProfileBtn"
-              style="background-color:#1f2235; color:white;">Save Profile</button>
+      <button type="button" id="saveProfileBtn" style="background-color:#1f2235; color:white;">Save Profile</button>
     </div>
 
     <hr style="margin-top:24px;">
@@ -100,28 +102,20 @@
     <input type="password" id="confirmPassInput" placeholder="Confirm New Password">
 
     <div class="clearfix" style="margin-top:4px;">
-      <button type="button" id="changePassBtn"
-              style="background-color:#1f2235; color:white;">Change Password</button>
+      <button type="button" id="changePassBtn" style="background-color:#1f2235; color:white;">Change Password</button>
     </div>
 
     <hr style="margin-top:24px;">
     <div class="clearfix">
       <button type="button" id="logoutBtn">Log Out</button>
-      <button type="button" id="deleteAccountBtn"
-              style="background-color:#c62828; color:white;">Delete Account</button>
+      <button type="button" id="deleteAccountBtn" style="background-color:#c62828; color:white;">Delete Account</button>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-   <script src="supabaseClient.js"></script>
-   <script src="authGuard.js"></script>
+  <script src="supabaseClient.js"></script>
+  <script src="authGuard.js"></script>
   <script src="account.js"></script>
-<script src="nav-toggle.js"></script>
-  
+  <script src="nav-toggle.js"></script>
 </body>
-</html>
 
-    <footer class="site-footer">
-    <p>&copy; 2026 AI Study Buddy. Built for late-night study sessions.</p>
-  </footer>
-</body>
 </html>
