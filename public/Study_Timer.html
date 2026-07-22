@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Study Timer</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabaseClient.js"></script>
   <script src="authGuard.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
   <nav class="nav-container">
@@ -71,15 +75,16 @@
       <button class="ctrl-btn secondary" id="reset">Reset</button>
     </div>
     <div class="progress-bar-wrap">
-    <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-bar" id="progressBar"></div>
     </div>
     <div class="session-log" id="sessionLog"></div>
   </div>
 
   <script src="timer.js"></script>
-<script src="nav-toggle.js"></script>
-    <footer class="site-footer">
+  <script src="nav-toggle.js"></script>
+  <footer class="site-footer">
     <p>&copy; 2026 AI Study Buddy. Built for late-night study sessions.</p>
-   </footer>
+  </footer>
 </body>
+
 </html>
