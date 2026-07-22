@@ -105,7 +105,7 @@ async function handleSignUp(toggleLink) {
     }
   }
 
-  alert('Registration successful! Check your email to confirm your account, then log in.');
+  alert('Registration successful!Please log in.');
   toggleLink.click();
 }
 
