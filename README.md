@@ -106,17 +106,6 @@ The `/api/groq-chat` endpoint includes basic protections against misuse:
 
 ---
 
-## ⚠️ Known Limitations
-
-This is an actively evolving student project. Current known limitations:
-
-- **Accounts are browser-local, not server-based.** Sign-up/login data lives in `localStorage`, so accounts don't sync across devices and are lost if browser storage is cleared.
-- **Passwords are not yet hashed.** This is on the roadmap — see below.
-- **Planner/Timer data isn't scoped per account** — it's shared per browser rather than per user.
-- **Rate limiting is in-memory**, not backed by an external store, so it resets on server cold starts.
-
----
-
 ## 🗺️ Roadmap
 
 - [ ] Hash passwords before storing (move toward a real backend + database)
