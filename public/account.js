@@ -180,10 +180,32 @@ function setupProfileForm(userId) {
     window.location.reload();
   });
 
-  document.getElementById('deleteAccountBtn').addEventListener('click', () => {
-    alert('Account deletion needs to go through a secure server step (it requires elevated permissions the browser is never given). This button is not wired up yet — see the note in the code.');
-  });
-}
+document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+    const confirmed = confirm('This will permanently delete your account. This cannot be undone. Continue?');
+    if (!confirmed) return;
+
+    const { data } = await db.auth.getSession();
+    const token = data?.session?.access_token;
+    if (!token) {
+        alert('You need to be logged in to do this.');
+        return;
+    }
+
+    const response = await fetch('/api/delete-account', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const result = await response.json();
+
+    if (!response.ok) {
+        alert('Could not delete account: ' + (result?.error || 'Unknown error'));
+        return;
+    }
+
+    alert('Your account has been deleted.');
+    await db.auth.signOut();
+    window.location.href = 'index.html';
+});
 
 async function changePassword() {
   const current = document.getElementById('currentPassInput').value;
