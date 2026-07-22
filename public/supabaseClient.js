@@ -1,4 +1,7 @@
-
+// Shared Supabase client used across every page.
+// Must be loaded AFTER the Supabase CDN script tag and BEFORE any page
+// script that uses `db` (authGuard.js, account.js, planner.js).
+//
 // The anon key below is safe to expose in frontend code — it is not a
 // secret. Row Level Security policies on the tasks/profiles tables are
 // what actually restrict access, not this key.
