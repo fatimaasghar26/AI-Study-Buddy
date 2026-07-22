@@ -15,8 +15,8 @@ function appendMessage(text, role) {
   const bubble = document.createElement("p");
   bubble.className = role === "user" ? "user" : "bot";
 
-  if (role === "bot") {
-    bubble.innerHTML = marked.parse(text);
+if (role === "bot") {
+    bubble.innerHTML = DOMPurify.sanitize(marked.parse(text));
   } else {
     bubble.textContent = text;
   }
@@ -56,7 +56,7 @@ async function sendMessage() {
       conversationHistory.pop();
     } else {
       const reply = data?.reply || "I couldn't generate a response. Try again.";
-      thinkingBubble.innerHTML = marked.parse(reply);
+      thinkingBubble.innerHTML = DOMPurify.sanitize(marked.parse(reply));
       thinkingBubble.classList.remove("thinking");
       conversationHistory.push({ role: "assistant", content: reply });
     }
