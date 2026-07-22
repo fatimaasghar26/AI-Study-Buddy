@@ -1,12 +1,23 @@
-
 let currentSession = null;
+let sessionReady = false;
+
+function updateGuardedButtons() {
+  for (const buttonId of Object.keys(guardedButtons)) {
+    const button = document.getElementById(buttonId);
+    if (button) button.disabled = !sessionReady;
+  }
+}
 
 db.auth.getSession().then(({ data }) => {
   currentSession = data.session;
+  sessionReady = true;
+  updateGuardedButtons();
 });
 
 db.auth.onAuthStateChange((_event, session) => {
   currentSession = session;
+  sessionReady = true;
+  updateGuardedButtons();
 });
 
 function isLoggedIn() {
@@ -21,14 +32,13 @@ function requireLogin(actionName) {
   }
   return true;
 }
-
 const guardedButtons = {
-  addTaskBtn: 'Add Task',
   sendBtn: 'Send Message',
   start: 'Study Timer'
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  updateGuardedButtons();
   for (const [buttonId, actionName] of Object.entries(guardedButtons)) {
     const button = document.getElementById(buttonId);
     if (!button) continue;
