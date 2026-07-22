@@ -202,10 +202,11 @@ document.getElementById('deleteAccountBtn').addEventListener('click', async () =
         return;
     }
 
-    alert('Your account has been deleted.');
+   alert('Your account has been deleted.');
     await db.auth.signOut();
     window.location.href = 'index.html';
-});
+  });
+}
 
 async function changePassword() {
   const current = document.getElementById('currentPassInput').value;
