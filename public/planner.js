@@ -1,16 +1,9 @@
-// Tasks now live in Supabase's `tasks` table, scoped per user by RLS,
-// instead of one shared localStorage key. `db` comes from
-// supabaseClient.js, loaded earlier.
-
 let tasks = [];
 let currentFilter = 'all';
 
 async function loadTasks() {
   const { data: { session } } = await db.auth.getSession();
   if (!session) {
-    // Not logged in: authGuard blocks the Add Task button already, but
-    // someone can still land on this page directly, so show nothing
-    // instead of throwing on the query below.
     tasks = [];
     renderTasks();
     return;
@@ -26,8 +19,6 @@ async function loadTasks() {
     return;
   }
 
-  // Map DB column names (name, subject, due_date, priority, done) onto
-  // the same shape the rest of this file already expects.
   tasks = data.map(t => ({
     id: t.id,
     name: t.name,
