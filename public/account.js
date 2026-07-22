@@ -86,8 +86,6 @@ async function handleSignUp(toggleLink) {
     alert('Passwords do not match!');
     return;
   }
-
-  // Supabase handles hashing, storage, and duplicate-email checks itself.
   const { data, error } = await db.auth.signUp({ email, password: pass });
 
   if (error) {
@@ -95,8 +93,6 @@ async function handleSignUp(toggleLink) {
     return;
   }
 
-  // Create the matching profiles row. Its id MUST equal the new user's
-  // auth id, or the RLS policies (auth.uid() = id) will reject it.
   if (data.user) {
     const { error: profileError } = await db.from('profiles').insert({
       id: data.user.id,
@@ -122,13 +118,12 @@ async function handleLogIn() {
     return;
   }
 
-  const { error } = await db.auth.signInWithPassword({ email, password: pass });
+const { error } = await db.auth.signInWithPassword({ email, password: pass });
 
-  if (error) {
-    alert('Invalid email or password.');
+if (error) {
+    alert(error.message);
     return;
-  }
-
+}
   window.location.reload();
 }
 
@@ -163,11 +158,6 @@ function setupProfileForm(userId) {
   });
 
   document.getElementById('saveProfileBtn').addEventListener('click', async () => {
-    // NOTE: this stores the profile picture as a base64 data URL string in
-    // the avatar_url text column, same as the original localStorage version
-    // did. That works but bloats the row. If you want real image hosting
-    // later, switch to Supabase Storage and save just the file's public
-    // URL here instead.
     const { error } = await db.from('profiles').update({
       first_name: document.getElementById('firstNameInput').value.trim(),
       last_name: document.getElementById('lastNameInput').value.trim(),
